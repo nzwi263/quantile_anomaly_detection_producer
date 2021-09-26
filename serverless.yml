@@ -1,0 +1,54 @@
+service: riskbloq-ahpf
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 30
+  region: ${opt:AWS_REGION}
+  stage: ${opt:ENV_STAGE}
+  layers:
+    - arn:aws:lambda:${opt:AWS_REGION}:770693421928:layer:Klayers-python38-pandas:38
+    - arn:aws:lambda:${opt:AWS_REGION}:770693421928:layer:Klayers-python38-requests:20
+  tracing:
+    apiGateway: true
+    lambda: true
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - s3:*
+      Resource: "arn:aws:s3:::${opt:TARGET_S3_BUCKET}/*"
+    - Effect: "Allow"
+      Action:
+        - s3:ListBucket
+      Resource: "arn:aws:s3:::${opt:TARGET_S3_BUCKET}"
+    - Effect: "Allow"
+      Action:
+        - sqs:*
+      Resource: "arn:aws:sqs:*:828366613602:*"
+
+functions:
+  assets-history-producer:
+    handler: handler.init_producer
+    environment:
+      TARGET_S3_BUCKET: ${opt:TARGET_S3_BUCKET}
+      TARGET_S3_ASSETS_DETAILS_PATH: ${opt:TARGET_S3_ASSETS_DETAILS_PATH}
+      TARGET_S3_ASSETS_DETAILS_FILENAME: ${opt:TARGET_S3_ASSETS_DETAILS_FILENAME}
+      QUEUE_LIST_FILENAME: ${opt:QUEUE_LIST_FILENAME}
+      TARGET_S3_ASSETS_HISTORY_LEAD_PATH: ${opt:TARGET_S3_ASSETS_HISTORY_LEAD_PATH}
+      TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH: ${opt:TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH}
+      TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH: ${opt:TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH}
+    events:
+      - http:
+          path: producer
+          method: post
+      - http:
+          path: retry
+          method: post
+
+plugins:
+  - serverless-python-requirements

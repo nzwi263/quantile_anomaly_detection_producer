@@ -1,0 +1,40 @@
+image: amaysim/serverless:2.44.0
+
+stages:
+  - deploy
+
+deploy_development:
+  stage: deploy
+  before_script:
+    - echo "Configuring container"
+    - mkdir ~/.aws && touch ~/.aws/credentials
+    - touch ~/.aws/config
+    - touch queues.json
+    - cat $AWS_CLI_CREDENTIALS >> ~/.aws/credentials
+    - cat $AWS_CLI_CONFIG >> ~/.aws/config
+    - cat $ASSETS_HISTORY_CONSUMER_QUEUES >> queues.json
+    - serverless plugin install -n serverless-python-requirements
+  script:
+    - echo "Deploying dev stack"
+    - serverless deploy --ENV_STAGE $ENV_STAGE --AWS_REGION $AWS_REGION --TARGET_S3_BUCKET $TARGET_S3_BUCKET --TARGET_S3_ASSETS_DETAILS_PATH $TARGET_S3_ASSETS_DETAILS_PATH --TARGET_S3_ASSETS_DETAILS_FILENAME $TARGET_S3_ASSETS_DETAILS_FILENAME --QUEUE_LIST_FILENAME $QUEUE_LIST_FILENAME --TARGET_S3_ASSETS_HISTORY_LEAD_PATH $TARGET_S3_ASSETS_HISTORY_LEAD_PATH --TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH $TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH --TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH $TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH --verbose
+  environment: development
+  only:
+    - development
+
+remove_development:
+  stage: deploy
+  before_script:
+    - echo "Configuring container"
+    - mkdir ~/.aws && touch ~/.aws/credentials
+    - touch ~/.aws/config
+    - touch queues.json
+    - cat $AWS_CLI_CREDENTIALS >> ~/.aws/credentials
+    - cat $AWS_CLI_CONFIG >> ~/.aws/config
+    - cat $ASSETS_HISTORY_CONSUMER_QUEUES >> queues.json
+    - serverless plugin install -n serverless-python-requirements
+  script:
+    - echo "Removing dev stack"
+    - serverless remove --ENV_STAGE $ENV_STAGE --AWS_REGION $AWS_REGION --TARGET_S3_BUCKET $TARGET_S3_BUCKET --TARGET_S3_ASSETS_DETAILS_PATH $TARGET_S3_ASSETS_DETAILS_PATH --TARGET_S3_ASSETS_DETAILS_FILENAME $TARGET_S3_ASSETS_DETAILS_FILENAME --QUEUE_LIST_FILENAME $QUEUE_LIST_FILENAME --TARGET_S3_ASSETS_HISTORY_LEAD_PATH $TARGET_S3_ASSETS_HISTORY_LEAD_PATH --TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH $TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH --TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH $TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH --verbose
+  environment: development
+  only:
+    - remove/development
