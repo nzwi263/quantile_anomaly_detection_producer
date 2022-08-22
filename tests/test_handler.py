@@ -11,7 +11,8 @@
 import pytest
 import json
 
-from handler import init_producer, init_retry
+# from handler import init_producer, init_retry
+from handler import init_producer
 
 
 def test_handler_init_producer():
@@ -27,14 +28,14 @@ def test_handler_init_producer():
     )
 
 
-def test_handler_init_retry():
-    assert {'body': '{"message": "Message accepted!"}', 'statusCode': 200} == init_retry(
-        {
-            "body": json.dumps(
-                {
-                    "date": "25-09-2021"
-                }
-            )
-        },
-        []
-    )
+# def test_handler_init_retry():
+#     assert {'body': '{"message": "Message accepted!"}', 'statusCode': 200} == init_retry(
+#         {
+#             "body": json.dumps(
+#                 {
+#                     "date": "25-09-2021"
+#                 }
+#             )
+#         },
+#         []
+#     )

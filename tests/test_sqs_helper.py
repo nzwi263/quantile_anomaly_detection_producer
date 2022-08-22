@@ -15,8 +15,8 @@ from libs.helpers.sqs_helper import send_sqs_queue_payload
 
 def test_sqs_helper_send_sqs_queue_payload():
     assert 200 == send_sqs_queue_payload(
-        queueRegion="us-east-1",
-        queueUrl="https://sqs.us-east-1.amazonaws.com/828366613602/riskbloq-ahf-dev-assetsHistoryQueue-1A57NWP7PAUK3",
+        queueRegion="ap-south-1",
+        queueUrl="https://sqs.ap-south-1.amazonaws.com/828366613602/riskbloq-ahf-dev-assetsHistoryQueue-6Zmw8A6XTYPm",
         queuePayload=[
             {
                 "Id": "0",
@@ -24,7 +24,7 @@ def test_sqs_helper_send_sqs_queue_payload():
                     [
                         {
                             "assetName": "bitcoin",
-                            "date": "01-09-2021"
+                            "date": "22-08-2022"
                         }
                     ]
                 ),
