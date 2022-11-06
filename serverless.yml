@@ -1,4 +1,4 @@
-service: riskbloq-ahpf
+service: riskbloq-coins-history-producer
 deprecationNotificationMode: warn
 configValidationMode: error
 
@@ -23,28 +23,22 @@ provider:
           Resource: "*"
         - Effect: "Allow"
           Action:
-            - s3:*
-          Resource: "arn:aws:s3:::${param:TARGET_S3_BUCKET}/*"
-        - Effect: "Allow"
-          Action:
-            - s3:ListBucket
-          Resource: "arn:aws:s3:::${param:TARGET_S3_BUCKET}"
-        - Effect: "Allow"
-          Action:
             - sqs:*
-          Resource: "arn:aws:sqs:*:828366613602:*"
+          Resource: "arn:aws:sqs:*:139699787534:*"
 
 functions:
-  assets-history-producer:
+  coins-history-producer:
     handler: handler.init_producer
     environment:
-      TARGET_S3_BUCKET: ${param:TARGET_S3_BUCKET}
-      TARGET_S3_ASSETS_DETAILS_PATH: ${param:TARGET_S3_ASSETS_DETAILS_PATH}
-      TARGET_S3_ASSETS_DETAILS_FILENAME: ${param:TARGET_S3_ASSETS_DETAILS_FILENAME}
-      QUEUE_LIST_FILENAME: ${param:QUEUE_LIST_FILENAME}
-      TARGET_S3_ASSETS_HISTORY_LEAD_PATH: ${param:TARGET_S3_ASSETS_HISTORY_LEAD_PATH}
-      TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH: ${param:TARGET_S3_ASSETS_HISTORY_FAILED_TAIL_PATH}
-      TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH: ${param:TARGET_S3_ASSETS_HISTORY_SUCCESSFUL_TAIL_PATH}
+      MONGODB_RSKYCLUSTER_REGION: ${param:MONGODB_RSKYCLUSTER_REGION}
+      MONGODB_RSKYCLUSTER_DATA_API_APP_ID: ${param:MONGODB_RSKYCLUSTER_DATA_API_APP_ID}
+      MONGODB_RSKYCLUSTER_DATA_API_KEY: ${param:MONGODB_RSKYCLUSTER_DATA_API_KEY}
+      MONGODB_RSKYCLUSTER_DATA_SOURCE: ${param:MONGODB_RSKYCLUSTER_DATA_SOURCE}
+      MONGODB_RSKYCLUSTER_DATABASE: ${param:MONGODB_RSKYCLUSTER_DATABASE}
+      MONGODB_RSKYCLUSTER_COINGECKO_TARGET_COINS_COLLECTION: ${param:MONGODB_RSKYCLUSTER_COINGECKO_TARGET_COINS_COLLECTION}
+      MONGODB_RSKYCLUSTER_COINGECKO_COINS_HISTORY_FAILED_COLLECTION: ${param:MONGODB_RSKYCLUSTER_COINGECKO_COINS_HISTORY_FAILED_COLLECTION}
+      SQS_QUEUE_REGION: ${param:SQS_QUEUE_REGION}
+      SQS_QUEUE_URL: ${param:SQS_QUEUE_URL}
     events:
       - http:
           path: producer

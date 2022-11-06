@@ -15,10 +15,10 @@ from libs.helpers.s3_helper import get_failed_assets_list
 
 
 def test_model_batch_assets_payloads():
-    assert 100 == len(Model(
+    assert 6 == len(Model(
         json.dumps(
             {
-                "date": "01-09-2021"
+                "date": "27-10-2022"
             }
         )
     ).batch_assets_payloads())
@@ -28,21 +28,21 @@ def test_batch_queue_payloads():
     model = Model(
         json.dumps(
             {
-                "date": "01-09-2021"
+                "date": "27-10-2022"
             }
         )
     )
 
     assetsBatches = model.batch_assets_payloads()
 
-    assert 10 == len(model.batch_queue_payloads(assetsBatches))
+    assert 6 == len(model.batch_queue_payloads(assetsBatches))
 
 
 def test_send_queue_payloads():
     assert 'Message accepted!' == Model(
         json.dumps(
             {
-                "date": "01-09-2021"
+                "date": "31-10-2022"
             }
         )
     ).send_queue_payloads()
@@ -70,7 +70,7 @@ def test_retry_assets_history_fetch():
     assert 'Message accepted!' == Model(
         json.dumps(
             {
-                "date": "01-08-2021"
+                "date": "31-10-2022"
             }
         )
     ).retry_assets_history_fetch()
