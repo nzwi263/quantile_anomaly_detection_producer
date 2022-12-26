@@ -1,15 +1,14 @@
-service: riskbloq-coins-history-producer
+service: rq-quant-anomaly-detect-producer
 deprecationNotificationMode: warn
 configValidationMode: error
 
 provider:
   name: aws
-  runtime: python3.8
-  timeout: 60
+  runtime: python3.9
+  timeout: 30
   layers:
-    - arn:aws:lambda:${param:AWS_REGION}:770693421928:layer:Klayers-p38-pandas:6
-    - arn:aws:lambda:${param:AWS_REGION}:770693421928:layer:Klayers-p38-requests:5
-    - arn:aws:lambda:${param:AWS_REGION}:770693421928:layer:Klayers-p38-aws-xray-sdk:7
+    - arn:aws:lambda:${param:AWS_REGION}:770693421928:layer:Klayers-p39-boto3:9
+    - arn:aws:lambda:${param:AWS_REGION}:770693421928:layer:Klayers-p39-aws-xray-sdk:9
   tracing:
     apiGateway: true
     lambda: true
@@ -27,22 +26,12 @@ provider:
           Resource: "arn:aws:sqs:*:139699787534:*"
 
 functions:
-  coins-history-producer:
+  func:
     handler: handler.init_producer
     environment:
-      MONGODB_RSKYCLUSTER_REGION: ${param:MONGODB_RSKYCLUSTER_REGION}
-      MONGODB_RSKYCLUSTER_DATA_API_APP_ID: ${param:MONGODB_RSKYCLUSTER_DATA_API_APP_ID}
-      MONGODB_RSKYCLUSTER_DATA_API_KEY: ${param:MONGODB_RSKYCLUSTER_DATA_API_KEY}
-      MONGODB_RSKYCLUSTER_DATA_SOURCE: ${param:MONGODB_RSKYCLUSTER_DATA_SOURCE}
-      MONGODB_RSKYCLUSTER_DATABASE: ${param:MONGODB_RSKYCLUSTER_DATABASE}
-      MONGODB_RSKYCLUSTER_COINGECKO_TARGET_COINS_COLLECTION: ${param:MONGODB_RSKYCLUSTER_COINGECKO_TARGET_COINS_COLLECTION}
-      MONGODB_RSKYCLUSTER_COINGECKO_COINS_HISTORY_FAILED_COLLECTION: ${param:MONGODB_RSKYCLUSTER_COINGECKO_COINS_HISTORY_FAILED_COLLECTION}
       SQS_QUEUE_REGION: ${param:SQS_QUEUE_REGION}
       SQS_QUEUE_URL: ${param:SQS_QUEUE_URL}
     events:
       - http:
           path: producer
-          method: post
-      - http:
-          path: retry
           method: post

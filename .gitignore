@@ -10,3 +10,4 @@ tests/pytest.ini
 queueRequestBatches.json
 queues.json
 failedAssetsList.json
+**/.venv
