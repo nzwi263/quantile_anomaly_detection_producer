@@ -13,7 +13,7 @@ from libs.helpers.sqs_helper import send_sqs_queue_payload
 import logging
 import json
 
-from aws_xray_sdk.core import xray_recorder
+# from aws_xray_sdk.core import xray_recorder
 
 logger = logging.getLogger()
 logger.setLevel(LOG_LEVEL)
@@ -24,7 +24,7 @@ class Model:
     def __init__(self, request):
         self.request = json.loads(request)
 
-    @xray_recorder.capture('model_process_request')
+    # @xray_recorder.capture('model_process_request')
     def process_request(self):
         logger.info('Starting to process request')
         message = ''

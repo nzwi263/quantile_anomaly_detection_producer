@@ -13,13 +13,13 @@ from libs.models.model import Model
 import json
 import logging
 
-from aws_xray_sdk.core import xray_recorder
+# from aws_xray_sdk.core import xray_recorder
 
 logger = logging.getLogger()
 logger.setLevel(LOG_LEVEL)
 
 
-@xray_recorder.capture('handler_init_producer')
+# @xray_recorder.capture('handler_init_producer')
 def init_producer(event, context):
     status_code = 200
     message = ''

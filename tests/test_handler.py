@@ -20,7 +20,7 @@ def test_handler_init_producer():
             "body": json.dumps(
                 [
                     {
-                        "date": "23-11-2022"
+                        "date": "27-12-2022"
                     }
                 ]
             )
